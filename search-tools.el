@@ -1,0 +1,33 @@
+(defun search-do-mgrep (str)
+  (interactive (search-symbol-interactive "Makefile grep: "))
+  (let ((default-directory (concat aosp-path "/")))
+    (async-shell-command (format "%s mgrep '%s'" (aosp-prepare-build-cmd) str)
+			 (get-buffer-create "*grep*")))
+  str)
+
+(defun search-do-cgrep (str)
+  (interactive (search-symbol-interactive "C grep: "))
+  (let ((default-directory (concat aosp-path "/")))
+    (async-shell-command (format "%s cgrep '%s'" (aosp-prepare-build-cmd) str)
+			 (get-buffer-create "*grep*")))
+  str)
+
+(defun search-do-find-file (filename)
+  (interactive (search-symbol-interactive "Filename"))
+  (find-name-dired aosp-path filename)
+  filename)
+
+(defvar opengrok-url-format "http://sourcebrowser.tl.intel.com:8080/source/search?q=%s&defs=&refs=&path=&hist=&project=%s")
+(defvar opengrok-default-project "ABSP_R4_JB_main")
+(defun search-do-opengrok-search (symbol-name)
+  (interactive (search-symbol-interactive "Opengrok search"))
+  (browse-url (format opengrok-url-format symbol-name opengrok-default-project))
+  symbol-name)
+
+(defconst google-url-format "https://www.google.com/search?client=ubuntu&channel=fs&q=%s&ie=utf-8&oe=utf-8")
+(defun search-do-google-search (symbol-name)
+  (interactive (search-symbol-interactive "Google search"))
+  (browse-url (format google-url-format symbol-name))
+  symbol-name)
+
+(provide 'search-tools)
