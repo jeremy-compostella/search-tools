@@ -1,11 +1,17 @@
-(require 'intel-shared)
-
 (defvar search-engine-buffer "*search:results*")
 (defvar search-engine-history '())
 
+(defun search-build-fun-list (prefix)
+  (let ((fun-list '(sentinel)))
+    (mapatoms (lambda (x)
+		(when (and (string-prefix-p prefix (symbol-name x))
+			   (symbol-function x))
+		  (nconc fun-list (list (cons (substring (symbol-name x) (length prefix)) x))))))
+    (sort (cdr fun-list) (lambda (x y) (string< (car x) (car y))))))
+
 (defun search-in-sources (&optional fun)
   (interactive)
-  (let* ((funs (intel-build-fun-list "search-do-"))
+  (let* ((funs (search-build-fun-list "search-do-"))
 	 (fun (or fun (assoc-default
 		       (ido-completing-read "Search method: "
 					    (mapcar 'car funs)) funs))))
