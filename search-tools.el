@@ -1,14 +1,14 @@
 (defun search-do-mgrep (str)
   (interactive (search-symbol-interactive "Makefile grep: "))
   (let ((default-directory (concat aosp-path "/")))
-    (async-shell-command (format "%s mgrep '%s'" (aosp-prepare-build-cmd) str)
+    (async-shell-command (format "source build/envsetup.sh && mgrep '%s'" str)
 			 (get-buffer-create "*grep*")))
   str)
 
 (defun search-do-cgrep (str)
   (interactive (search-symbol-interactive "C grep: "))
   (let ((default-directory (concat aosp-path "/")))
-    (async-shell-command (format "%s cgrep '%s'" (aosp-prepare-build-cmd) str)
+    (async-shell-command (format "source build/envsetup.sh && cgrep '%s'" str)
 			 (get-buffer-create "*grep*")))
   str)
 
